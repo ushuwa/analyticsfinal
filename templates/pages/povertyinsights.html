@@ -1,0 +1,161 @@
+<style>
+    :root {
+        --ppi-crimson: #346739;
+        --light-gray: #f8f9fa;
+        --bg: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #333;
+    }
+
+    #insights {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    /* Table Container Styling */
+    .table-container-modern {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: white;
+    }
+
+    .table-responsive-modern {
+        height: calc(100vh - 280px); /* Adjust based on your header height */
+        overflow-y: auto;
+    }
+
+    #povertyIndexTables {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* Header Styling */
+    #povertyIndexTables thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--bg) !important;
+        color: #666;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 15px;
+        border-bottom: 2px solid var(--border-color);
+        text-align: left;
+    }
+
+    /* Body Styling */
+    #povertyIndexTables tbody td {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+        color: var(--text-dark);
+    }
+
+    /* Row Hover Effect */
+    #povertyIndexTables tbody tr:hover {
+        background-color: rgba(128, 0, 32, 0.03);
+    }
+
+    /* Alignment for numeric columns */
+    .text-center { text-align: center !important; }
+
+    /* Filter Labels */
+    .filter-label { 
+        font-weight: 600; 
+        font-size: 0.85rem; 
+        color: var(--text-dark);
+    }
+
+    /* Loading Spinner Styling */
+    .table-loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    .spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid var(--border-color);
+        border-top: 3px solid var(--ppi-crimson);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 10px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="container-fluid" id="insights">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h1 class="page-title" style="font-size: 2rem;">PROGRESS OUT OF POVERTY INDEX</h1>
+        </div>
+    </div>
+
+    <div class="row mb-2 g-3 align-items-center">
+        <div class="col-12 d-flex align-items-center flex-wrap">
+            <div class="d-flex align-items-center me-4">
+                <span class="filter-label me-2">Show</span>
+                <select id="rowsPerPage" class="form-select form-select-sm shadow-sm" style="width: auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <span class="filter-label me-2">Filter by:</span>
+                <select id="selectBranchLevel" class="form-select form-select-sm shadow-sm" style="width: auto; min-width: 140px;">
+                    <option value="area_office">Area</option>
+                    <option value="unit_office">Unit</option>
+                    <option value="center_office">Center</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="table-container-modern">
+                <div class="table-responsive-modern">
+                    <table id="povertyIndexTables">
+                        <thead>
+                            <tr>
+                                <th>Branch</th>
+                                <th class="text-center">No. of Active Clients</th>
+                                <th class="text-center">Pagtalubo</th>
+                                <th class="text-center">Regular</th>
+                                <th class="text-center" style="background: white !important;">Percentage of Pagtalubo</th>
+                                <th class="text-center" style="background: white !important;">Percentage of Regular</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center p-1 border-top">
+                    <small id="tableInfo" class="text-muted"></small>
+                    <div id="paginationControls"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

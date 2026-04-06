@@ -1,0 +1,176 @@
+
+
+<style>
+    :root {
+        --ppi-crimson: #800020;
+        --light-gray: #f8f9fa;
+        --bg: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #333;
+    }
+    /* Modern Dashboard Styling */
+    .dashboard-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+    }
+    #dashboard {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    /* Refined Black Score Box */
+    .ppi-card-mini {
+        background: #000;
+        color: #fff;
+        border-radius: 12px;
+        width: 100px; /* Slightly wider to fit decimals comfortably */
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        margin-left: 10px;
+    }
+
+    h2{
+        color: white;
+        margin-bottom: 0;
+        border-bottom: 0;
+        padding-bottom: 0;
+        display: inline-block;
+    }
+
+    .ppi-card-mini h2 {
+        color: white;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .ppi-subtitle {
+        font-size: 0.60rem;
+        font-weight: 700;
+        margin-top: 10px;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+
+    /* The Beige Data Bar */
+    .data-bar {
+        background-color: #f3eee0;
+        border-radius: 10px;
+        padding: 20px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 1;
+    }
+
+    .stat-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-box i { font-size: 3rem; }
+    .stat-info { display: flex; flex-direction: column; }
+    .stat-label { font-weight: 900; font-size: 1rem; color: #333; }
+    .stat-number { font-size: 1.8rem; font-weight: 700; color: #000; line-height: 1; }
+
+    .color-blue { color: #5d87ff; }
+    .color-yellow { color: #ffbc00; }
+    .color-green { color: #0acf97; }
+
+    .chart-box {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 30px;
+        height: 350px;
+    }
+    
+    .loading-pulse {
+        opacity: 0.5;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+</style>
+
+<div class="container-fluid dashboard-container" id="dashboard">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h1 class="page-title" style="font-size: 2rem;">PROGRESS OUT OF POVERTY INDEX</h1>
+        </div>
+    </div>
+    
+    <div class="row align-items-center mb-1">
+        <div class="col-md-9"></div>
+        <div class="col-md-3 text-end">
+            <label class="fw-bold me-2">Filter by:</label>
+            <select id="summaryFilter" class="form-select d-inline-block w-auto">
+                <option value="all" selected>All Segments</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 text-center">
+            <img src="{{ url_for('static', filename='hyper/image/ph.svg') }}" 
+                 alt="Philippines Map" 
+                 style="margin: -55px -105px;width: 100%;min-width: 600px;opacity: 0.9;">
+        </div>
+
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-center">
+                    <div class="ppi-card-mini">
+                        <h2 id="ppiAvgScore">0.00</h2>
+                    </div>
+                    <div class="ppi-subtitle">Average PPI Score</div>
+                </div>
+
+                <div class="data-bar shadow-sm">
+                    <div class="stat-box">
+                        <i class="fas fa-users color-blue"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">TOTAL CLIENTS</span>
+                            <span class="stat-number" id="totalClients">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-user-circle color-yellow"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">PAGTALUBO</span>
+                            <span class="stat-number" id="totalPagtalubo">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-user-circle" style="color: #238b45;"></i>
+                        <div class="stat-info">
+                            <span class="stat-label">REGULAR</span>
+                            <span class="stat-number" id="totalRegular">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-box shadow-sm">
+                <canvas id="ppiChartVariation"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

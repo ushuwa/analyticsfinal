@@ -1,0 +1,142 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="leftside-menu">
+
+    <!-- Brand Logo Light -->
+    <a href="index.html" class="logo logo-light">
+        <span class="logo-lg">
+            <!-- <img src="{{ url_for('static', filename='hyper/images/logo.png') }}" alt="logo"> -->
+        </span>
+        <span class="logo-sm">
+            <!-- <img src="{{ url_for('static', filename='hyper/images/logo-sm.png') }}" alt="small logo"> -->
+        </span>
+    </a>
+
+    <!-- Brand Logo Dark -->
+    <a href="/dashboard" class="logo logo-dark">
+        <span class="logo-lg">
+            <!-- <img src="{{ url_for('static', filename='hyper/images/logo-dark.png') }}" alt="dark logo"> -->
+        </span>
+        <span class="logo-sm">
+            <!-- <img src="{{ url_for('static', filename='hyper/images/logo-dark-sm.png') }}" alt="small logo"> -->
+        </span>
+    </a>
+
+    <!-- Sidebar Hover Menu Toggle Button -->
+    <div class="button-sm-hover" data-bs-toggle="tooltip" data-bs-placement="right" title="Show Full Sidebar">
+        <i class="ri-checkbox-blank-circle-line align-middle"></i>
+    </div>
+
+    <!-- Full Sidebar Menu Close Button -->
+    <div class="button-close-fullsidebar">
+        <i class="ri-close-fill align-middle"></i>
+    </div>
+
+    <!-- Sidebar -left -->
+    <div class="h-100" id="leftside-menu-container" data-simplebar>
+
+        <!--- Sidemenu -->
+        <ul class="side-nav" >
+            <li class="side-nav-item" class="menu">
+                <a data-bs-toggle="collapse" aria-expanded="false" aria-controls="sidebarDashboards" class="side-nav-link">
+                    <span style="display: block; width: 100%; text-align: center; color: white;"> Welcome, {{ user.firstname}}! </span>
+                </a>
+            </li>
+            
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#maps" aria-expanded="true" class="side-nav-link">
+                    <i class="ri-home-4-fill"></i>
+                    <span> PPI </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="maps">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="/analytics/dashboard" 
+                            onclick="navigate(event, '/analytics/dashboard', 'dashboard.html', this)">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/cardprograms" 
+                            onclick="navigate(event, '/analytics/cardprograms', 'cardprograms.html', this)">Card Mri Programs</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/povertyinsights" 
+                            onclick="navigate(event, '/analytics/povertyinsights', 'povertyinsights.html', this)">Poverty Insights</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/uploads" 
+                            onclick="navigate(event, '/analytics/uploads', 'uploads.html', this)">Uploads</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#scholarship" aria-expanded="false" class="side-nav-link">
+                    <i class="material-icons">&#xe80c;</i>
+                    <span> Scholarship </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="scholarship">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="/analytics/scholarship_dashboard" 
+                            onclick="navigate(event, '/analytics/scholarship_dashboard', 'scholarship_dashboard.html', this)">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/scholarfinder" 
+                            onclick="navigate(event, '/analytics/scholarfinder', 'scholarfinder.html', this)">Scholarship Finder</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/scholarship_uploads" 
+                            onclick="navigate(event, '/analytics/scholarship_uploads', 'scholarship_uploads.html', this)">Uploads</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#atrisk" aria-expanded="false" class="side-nav-link">
+                    <i class="ri-alarm-warning-fill"></i>
+                    <span> At-Risk </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="atrisk">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="/analytics/atrisk_dashboard" 
+                            onclick="navigate(event, '/analytics/atrisk_dashboard', 'atrisk_dashboard.html', this)">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/clientlevelrisk" 
+                            onclick="navigate(event, '/analytics/clientlevelrisk', 'clientlevelrisk.html', this)">Client Level Risk</a>
+                        </li>
+                        <li>
+                            <a href="/analytics/atrisk_uploads" 
+                            onclick="navigate(event, '/analytics/atrisk_uploads', 'atrisk_uploads.html', this)">Uploads</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+
+            <li class="side-nav-item" class="menu">
+                <a data-bs-toggle="collapse" href="#usermanagement" aria-expanded="false" class="side-nav-link">
+                    <i class="ri-group-fill"></i>
+                    <span> User Management </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                 <div class="collapse" id="usermanagement">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="/analytics/usermanagement" 
+                            onclick="navigate(event, '/analytics/usermanagement', 'usermanagement.html', this)">Users</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- ========== Left Sidebar End ========== -->

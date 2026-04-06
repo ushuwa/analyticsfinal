@@ -1,0 +1,48 @@
+<div class="container-fluid" id="uploads">
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box">
+        <div class="page-title-right">
+        </div>
+        <h4 class="page-title">Uploads</h4>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <form action="/atrisk_upload" method="post" class="dropzone" id="myAwesomeDropzone2" data-plugin="dropzone" data-previews-container="#file-previews2"
+          data-upload-preview-template="#uploadPreviewTemplate2">
+          <div class="fallback">
+              <input name="file" type="file" multiple />
+          </div>
+          <div class="dz-message needsclick">
+              <i class="h1 text-muted ri-upload-cloud-2-line"></i>
+              <h3>Drop files here or click to upload.</h3>
+              <span class="text-muted font-13">(This is just a demo dropzone. Selected files are
+                  <strong>not</strong> actually uploaded.)</span>
+          </div>
+      </form>
+      <div class="dropzone-previews mt-3" id="file-previews2"></div>
+      <div class="d-none" id="uploadPreviewTemplate2">
+          <div class="card mt-1 mb-0 shadow-none border">
+              <div class="p-2">
+                  <div class="row align-items-center">
+                      <div class="col-auto">
+                          <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                      </div>
+                      <div class="col ps-0">
+                          <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
+                          <p class="mb-0" data-dz-size></p>
+                      </div>
+                      <div class="col-auto">
+                          <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                              <i class="ri-close-line"></i>
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>                                    
+    </div>
+  </div>
+</div>

@@ -1,0 +1,227 @@
+<style>
+  :root {
+        --ppi-crimson: #800020;
+        --light-gray: #f8f9fa;
+        --bg: #ffffff !important;
+        --bg2: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #000;
+        --beige-bg: #e9e6dd;
+        --blue-bg: #6db2f0;
+        --green-bg: #238b45;
+    }
+    
+    .dashboard-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+    }
+    #dashboard {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    .data-bar-container {
+        display: flex;
+        width: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .stat-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .bg-beige { background-color: var(--beige-bg); }
+    .bg-blue { background-color: var(--blue-bg); }
+    .bg-green { background-color: var(--green-bg); }
+
+    .stat-section i { font-size: 3.5rem; color: #000; }
+    
+    .stat-info { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        text-align: center;
+    }
+    
+    .stat-label { 
+        font-weight: 800; 
+        font-size: 1.2rem; 
+        color: #000; 
+        line-height: 1;
+        text-transform: uppercase;
+    }
+    
+    .stat-number { 
+        font-size: 2.2rem; 
+        font-weight: 800; 
+        color: #000; 
+        margin-top: 5px;
+    }
+
+    /* Chart and Table Section Styling */
+    .section-title {
+        font-weight: 800;
+        color: var(--text-dark);
+        font-size: 0.99rem;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .chart-box {
+        height: 350px;
+        width: 100%;
+    }
+
+    /* Ensure the container controls the height and scrolling */
+    .table-container {
+        border-radius: 8px;
+        overflow: hidden; /* Clips the inner content to the border radius */
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: white;
+    }
+
+    /* This is the wrapper that handles the scroll */
+    .table-responsive {
+        max-height: 400px; /* Set your desired max height here */
+        overflow-y: auto;
+        display: block;    /* Required for some browsers to respect max-height on this div */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate; /* Required for sticky headers to work well with borders */
+        border-spacing: 0;
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #ffffff !important; /* Must have a solid background */
+        color: #666;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 15px;
+        border-bottom: 2px solid var(--border-color);
+        /* Prevent text from wrapping if columns get tight */
+        white-space: nowrap; 
+    }
+
+    /* Optional: style the scrollbar for a cleaner look */
+    .table-responsive::-webkit-scrollbar {
+        width: 6px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #d1d1d1;
+        border-radius: 10px;
+    }
+
+    tbody td {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+
+    tbody tr:hover {
+        background-color: rgba(128, 0, 32, 0.03);
+    }
+
+    .loading-pulse {
+        opacity: 0.5;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+</style>
+
+<div class="container-fluid dashboard-container" id="dashboard"> 
+    <div class="row mb-3">
+        <div class="col-12">
+            <h1 class="page-title" style="font-size: 2rem;">SCHOLARSHIP PRIORITIZATION</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-4 text-center">
+            <img src="{{ url_for('static', filename='hyper/image/ph.svg') }}" 
+                 alt="Philippines Map" 
+                 style="margin-top: -30px; width: 100%; min-width: 450px; opacity: 0.9;">
+        </div>
+
+        <div class="col-lg-8">
+            <div class="data-bar-container shadow-sm">
+                <div class="stat-section bg-beige">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-label">ELIGIBLE DEPENDENT</span>
+                        <span class="stat-number" id="totalEligible">0</span>
+                    </div>
+                </div>
+                <div class="stat-section bg-blue">
+                    <i class="fas fa-user-graduate"></i>
+                    <div class="stat-info">
+                        <span class="stat-label">HIGH PRIORITY</span>
+                        <span class="stat-number" id="totalHighPriority">0</span>
+                    </div>
+                </div>
+                <div class="stat-section bg-green">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-label">TOTAL DEPENDENTS</span>
+                        <span class="stat-number" id="totalDependents">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-5">
+                    <h2 class="section-title">Education Level Distribution</h2>
+                    <div class="chart-box">
+                        <canvas id="ppiChartVariation"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <h2 class="section-title">High Priority Dependents</h2>
+                    <div class="table-container shadow-sm bg-white">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color: var(--bg2) !important;">Name of Client</th>
+                                        <th style="background-color: var(--bg2) !important;">Area</th>
+                                        <th style="background-color: var(--bg2) !important;">Unit</th>
+                                        <th style="background-color: var(--bg2) !important;">Center</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="highPriorityTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

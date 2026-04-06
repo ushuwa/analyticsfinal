@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Analytic Web App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='hyper/images/favicon.ico') }}">
+
+        <!-- Theme Config Js -->
+        <script src="{{ url_for('static', filename='hyper/js/hyper-config.js') }}"></script>
+
+        <!-- App css -->
+        <link href="{{ url_for('static', filename='hyper/css/app-saas.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+        <link href="{{ url_for('static', filename='hyper/css/app-saas.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+
+        <!-- Icons css -->
+        <link href="{{ url_for('static', filename='hyper/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/css/icons.css') }}" rel="stylesheet" type="text/css" />
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+          
+        <!-- for analytics graph -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <!-- for philippine map -->
+        <!-- <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/mapdata/countries/ph/ph-all.topo.json"></script> -->
+        <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>       
+
+        <link href="{{ url_for('static', filename='hyper/cardmriprograms.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/dashboard.css') }}" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    </head>
+
+    <body>
+        <div class="wrapper">
+            {% include 'navbar/topbar.html' %}
+            {% include 'navbar/sidebar.html' %}
+            <div class="content-page">
+                <div class="content" id="mainContent">
+                </div>
+            </div>
+        </div>
+
+    <script src="{{ url_for('static', filename='hyper/main.js') }}" ></script>
+    <script src="{{ url_for('static', filename='hyper/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='hyper/cmriprograms.js') }}"></script>
+    <script src="{{ url_for('static', filename='hyper/povertyinsight.js') }}"></script>
+    <script src="{{ url_for('static', filename='hyper/uploads.js') }}" ></script>
+    <script src="{{ url_for('static', filename='hyper/clientlevelrisk.js') }}" ></script> 
+
+    <script src="{{ url_for('static', filename='hyper/scholarship_dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='hyper/atrisk_dashboard.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='hyper/users.js') }}" ></script>
+
+
+
+    <!-- plugin js -->
+    <script src="{{ url_for('static', filename='hyper/vendor/dropzone/min/dropzone.min.js') }}"></script>
+    <!-- init js -->
+    <script src="{{ url_for('static', filename='hyper/js/ui/component.fileupload.js') }}"></script>
+
+    <!-- Vendor js -->
+    <script src="{{ url_for('static', filename='hyper/js/vendor.min.js') }}"></script>
+  
+    <!-- Code Highlight js -->
+    <script src="{{ url_for('static', filename='hyper/vendor/highlightjs/highlight.pack.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='hyper/vendor/clipboard/clipboard.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='hyper/js/hyper-syntax.js') }}"></script>
+
+    <!-- App js -->
+    <script src="{{ url_for('static', filename='hyper/js/app.js') }}"></script>
+ 
+    </body>
+</html> 

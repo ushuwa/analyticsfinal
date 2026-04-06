@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 26px;
+        }
+
+        h2 {
+            color: #444;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-size: 12pt;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        ul {
+            font-size: 12pt;
+            margin-left: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Scholarship Insights Report</h1>
+<p><b>Generated On:</b> {{ generated_on }}</p>
+
+<div class="section">
+    <h2>Regions Needing Additional Support</h2>
+    {% if top_need %}
+        <ul>
+        {% for item in top_need %}
+            <li>{{ item.city.title() }}, {{ item.province.title() }} — Priority Score: {{ item.score }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</div>
+
+<div class="section">
+    <h2>Predicted Scholarship Demand for Next Year</h2>
+    {% if predicted %}
+        <ul>
+        {% for item in predicted %}
+            <li>{{ item.city.title() }}, {{ item.province.title() }} — Estimated Scholars: {{ item.predicted }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</div>
+
+<div class="section">
+    <h2>Client Segments with Highest Improvement Rates</h2>
+
+    <h3>By City:</h3>
+    <ul>
+    {% for k, v in city_segments.items() %}
+        <li>{{ k }} — {{ v }} clients</li>
+    {% endfor %}
+    </ul>
+
+    <h3>By Income Level:</h3>
+    <ul>
+    {% for income, count in income_segments.items() %}
+        <li>{{ income }} — {{ count }} clients</li>
+    {% endfor %}
+    </ul>
+
+</div>
+
+</body>
+</html>

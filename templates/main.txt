@@ -1,0 +1,680 @@
+card mri program
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARD MRI PPI Methodology Explainer</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary: #15803d; /* green-700 */
+            --primary-light: #16a34a; /* green-600 */
+            --bg-light: #f0fdf4; /* green-50 */
+            --white: #ffffff;
+            --gray-100: #f3f4f6;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --border-color: #dcfce7; /* green-100 */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, var(--bg-light), var(--white));
+            color: var(--gray-800);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; }
+        .subtitle { color: var(--gray-600); max-width: 600px; margin: 0 auto; }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            background-color: var(--white);
+            color: var(--gray-600);
+        }
+
+        .nav-btn:hover { background-color: var(--bg-light); }
+        .nav-btn.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; display: inline-block; }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .card-title { font-weight: bold; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .card-text { font-size: 0.9rem; color: var(--gray-600); line-height: 1.5; }
+
+        /* Interactive Buttons (Survey) */
+        .option-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid var(--gray-100);
+            border-radius: 0.5rem;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover { border-color: var(--border-color); }
+
+        .option-btn.selected {
+            border-color: var(--primary-light);
+            background-color: var(--bg-light);
+            color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .points-badge {
+            background: var(--gray-100);
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* Scoring Section */
+        .score-board {
+            background: var(--gray-800);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .score-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #374151;
+        }
+
+        /* Table */
+        .lookup-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .lookup-table th, .lookup-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .lookup-table th { background-color: var(--gray-100); color: var(--gray-600); }
+        .highlight-row { background-color: #fef9c3; font-weight: bold; } /* Yellow-100 */
+
+        .prob-result {
+            margin-top: 1.5rem;
+            background-color: #eff6ff; /* blue-50 */
+            color: #1e40af; /* blue-800 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Controls */
+        .action-btn {
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+            float: right;
+        }
+
+        .action-btn:hover { background-color: var(--primary); }
+        .action-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        .back-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            cursor: pointer;
+            float: left;
+            margin-top: 0.75rem;
+        }
+        .back-link:hover { text-decoration: underline; color: var(--primary); }
+
+        .clearfix::after { content: ""; clear: both; display: table; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- HEADER -->
+    <header>
+        <div class="header-badge">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+            <h1 style="display:inline;">CARD MRI PPI Methodology</h1>
+        </div>
+        <p class="subtitle">A simple visual guide to how CARD MRI uses the <strong>Poverty Probability Index (PPI)</strong> to measure outreach and impact.</p>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <button class="nav-btn active" onclick="setStep(0)">1. Introduction</button>
+        <button class="nav-btn" onclick="setStep(1)">2. The Survey</button>
+        <button class="nav-btn" onclick="setStep(2)">3. The Scoring</button>
+        <button class="nav-btn" onclick="setStep(3)">4. The Action</button>
+    </nav>
+
+    <!-- CONTENT AREA -->
+    <main id="main-content">
+
+        <!-- STEP 0: INTRO -->
+        <div id="step-0" class="section active">
+            <h2>Why Measure Poverty?</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title" style="color:#dc2626;">The Challenge</div>
+                    <p class="card-text">CARD MRI's mission is to eradicate poverty. But how do they know if new clients are actually poor? Or if long-term clients are moving out of poverty? Guesswork isn't enough.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" style="color:var(--primary);">The Solution: PPI</div>
+                    <p class="card-text">The <strong>Poverty Probability Index</strong> is a simple scorecard. It uses 10 questions about a household's characteristics to statistically calculate the likelihood that they are living below the poverty line.</p>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 1.5rem; border-left: 4px solid var(--primary);">
+                <div class="card-title">Key Concept: The Proxy</div>
+                <p class="card-text">Instead of asking "How much money do you make?" (which is hard to verify), PPI asks about <strong>observable proxies</strong> like "What is your roof made of?" or "Do you have a washing machine?".</p>
+            </div>
+            <div class="clearfix" style="margin-top: 2rem;">
+                <button class="action-btn" onclick="setStep(1)">See How It Works →</button>
+            </div>
+        </div>
+
+        <!-- STEP 1: SURVEY -->
+        <div id="step-1" class="section">
+            <h2>Step 1: The Field Survey</h2>
+            <p class="subtitle" style="text-align:left; margin-bottom:1.5rem;">Imagine you are an Account Officer visiting a client. Select the answers below to simulate the survey.</p>
+
+            <div class="card-grid">
+                <!-- Q1 -->
+                <div class="card">
+                    <div class="card-title">1. Roof Material?</div>
+                    <button class="option-btn" id="roof-light" onclick="selectAnswer('roof', 'light', 0)">
+                        <span>Light / Salvaged</span>
+                        <span class="points-badge">+0 pts</span>
+                    </button>
+                    <button class="option-btn" id="roof-strong" onclick="selectAnswer('roof', 'strong', 12)">
+                        <span>Strong / Galv. Iron</span>
+                        <span class="points-badge">+12 pts</span>
+                    </button>
+                </div>
+
+                <!-- Q2 -->
+                <div class="card">
+                    <div class="card-title">2. Children (0-11 yrs)?</div>
+                    <button class="option-btn" id="child-many" onclick="selectAnswer('children', 'many', 0)">
+                        <span>3 or more</span>
+                        <span class="points-badge">+0 pts</span>
+                    </button>
+                    <button class="option-btn" id="child-few" onclick="selectAnswer('children', 'few', 15)">
+                        <span>0 to 1</span>
+                        <span class="points-badge">+15 pts</span>
+                    </button>
+                </div>
+
+                <!-- Q3 -->
+                <div class="card">
+                    <div class="card-title">3. Own a TV?</div>
+                    <button class="option-btn" id="tv-no" onclick="selectAnswer('tv', 'no', 0)">
+                        <span>No</span>
+                        <span class="points-badge">+0 pts</span>
+                    </button>
+                    <button class="option-btn" id="tv-yes" onclick="selectAnswer('tv', 'yes', 8)">
+                        <span>Yes</span>
+                        <span class="points-badge">+8 pts</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="clearfix" style="margin-top: 2rem;">
+                <button id="calc-btn" class="action-btn" disabled onclick="calculateAndShow()">Calculate Score →</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: SCORING -->
+        <div id="step-2" class="section">
+            <h2>Step 2: Scoring & Probability</h2>
+            
+            <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+                
+                <!-- Calculation Display -->
+                <div>
+                    <div class="score-board">
+                        <div style="margin-bottom:1rem; color:#d1d5db;">Total PPI Score</div>
+                        <div class="score-row">
+                            <span>Roof Material:</span>
+                            <span style="color:#4ade80;" id="score-roof">+0 pts</span>
+                        </div>
+                        <div class="score-row">
+                            <span>Children Count:</span>
+                            <span style="color:#4ade80;" id="score-children">+0 pts</span>
+                        </div>
+                        <div class="score-row">
+                            <span>TV Ownership:</span>
+                            <span style="color:#4ade80;" id="score-tv">+0 pts</span>
+                        </div>
+                        <div class="score-total">
+                            <span>Total:</span>
+                            <span><span id="score-total-val">0</span> <span style="font-size:1rem; font-weight:normal; color:#9ca3af;">/ 100</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lookup Table -->
+                <div>
+                    <p style="font-size:0.9rem; margin-bottom:1rem;"><strong>Higher Score = Lower Poverty Probability.</strong> The total score is matched against a standard table.</p>
+                    <table class="lookup-table">
+                        <thead>
+                            <tr><th>PPI Score</th><th>Poverty Likelihood</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr id="row-very-high"><td>0 - 9</td><td style="color:#dc2626;">85% (Very High)</td></tr>
+                            <tr id="row-high"><td>10 - 19</td><td style="color:#f97316;">60% (High)</td></tr>
+                            <tr id="row-mod"><td>20 - 29</td><td style="color:#ca8a04;">35% (Moderate)</td></tr>
+                            <tr id="row-low"><td>30+</td><td style="color:var(--primary);">10% (Low)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="prob-result">
+                        <div style="font-size:2rem; font-weight:bold;" id="prob-display">--%</div>
+                        <div>Probability this household is below the poverty line.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix" style="margin-top: 2rem;">
+                <a class="back-link" onclick="setStep(1)">← Adjust Answers</a>
+                <button class="action-btn" onclick="setStep(3)">What does CARD do? →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: ACTION -->
+        <div id="step-3" class="section">
+            <h2>Step 3: Taking Action</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title">Targeting</div>
+                    <p class="card-text">CARD uses the score to ensure they are reaching their intended demographic: the poor. If a branch has too many high-scoring clients, they need to refocus.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Segmentation</div>
+                    <p class="card-text">
+                        <strong>Very Poor (0-20):</strong> Need grants/health support.<br>
+                        <strong>Enterprising Poor (20-50):</strong> Ready for microloans.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Monitoring Change</div>
+                    <p class="card-text">By repeating the survey every year, CARD tracks if a client's score is going UP. If scores rise, the poverty alleviation program is working.</p>
+                </div>
+            </div>
+
+            <div style="margin-top:2rem; background:var(--primary); color:white; padding:1.5rem; border-radius:0.75rem; text-align:center;">
+                <h3 style="margin:0 0 0.5rem 0;">The "Double Bottom Line"</h3>
+                <p style="margin:0; opacity:0.9;">Financial data tells CARD if the bank is sustainable.<br>PPI data tells CARD if they are fulfilling their social mission.</p>
+            </div>
+
+            <div style="text-align:center; margin-top:2rem;">
+                <a class="back-link" style="float:none;" onclick="resetApp()">Start Over ↺</a>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    /* --- JAVASCRIPT LOGIC --- */
+
+    // State
+    let currentStep = 0;
+    let answers = {
+        roof: null,     // { points: 0 }
+        children: null, // { points: 0 }
+        tv: null        // { points: 0 }
+    };
+
+    // DOM Elements
+    const sections = document.querySelectorAll('.section');
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const calcBtn = document.getElementById('calc-btn');
+
+    // Navigation
+    function setStep(stepIndex) {
+        currentStep = stepIndex;
+        
+        // Update Sections
+        sections.forEach((sec, idx) => {
+            if (idx === stepIndex) sec.classList.add('active');
+            else sec.classList.remove('active');
+        });
+
+        // Update Nav Buttons
+        navBtns.forEach((btn, idx) => {
+            if (idx === stepIndex) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+
+    // Selection Logic
+    function selectAnswer(category, idPart, points) {
+        // Update State
+        answers[category] = { points: points };
+
+        // Visual Selection
+        // Deselect all in this group
+        const groupBtns = document.querySelectorAll(`[id^="${getPrefix(category)}"]`);
+        groupBtns.forEach(btn => btn.classList.remove('selected'));
+
+        // Select clicked
+        const clickedBtn = document.getElementById(getPrefix(category) + '-' + idPart);
+        if(clickedBtn) clickedBtn.classList.add('selected');
+
+        checkSurveyComplete();
+    }
+
+    // Helper to map category to ID prefix
+    function getPrefix(cat) {
+        if (cat === 'roof') return 'roof';
+        if (cat === 'children') return 'child';
+        if (cat === 'tv') return 'tv';
+        return '';
+    }
+
+    function checkSurveyComplete() {
+        if (answers.roof && answers.children && answers.tv) {
+            calcBtn.disabled = false;
+        } else {
+            calcBtn.disabled = true;
+        }
+    }
+
+    function calculateAndShow() {
+        // Calculate
+        const roofPts = answers.roof.points;
+        const childPts = answers.children.points;
+        const tvPts = answers.tv.points;
+        const total = roofPts + childPts + tvPts;
+
+        // Update Display Text
+        document.getElementById('score-roof').innerText = `+${roofPts} pts`;
+        document.getElementById('score-children').innerText = `+${childPts} pts`;
+        document.getElementById('score-tv').innerText = `+${tvPts} pts`;
+        document.getElementById('score-total-val').innerText = total;
+
+        // Lookup Table Logic
+        let probability = 0;
+        
+        // Reset rows
+        document.querySelectorAll('.lookup-table tr').forEach(r => r.classList.remove('highlight-row'));
+
+        if (total < 10) {
+            probability = 85;
+            document.getElementById('row-very-high').classList.add('highlight-row');
+        } else if (total < 20) {
+            probability = 60;
+            document.getElementById('row-high').classList.add('highlight-row');
+        } else if (total < 30) {
+            probability = 35;
+            document.getElementById('row-mod').classList.add('highlight-row');
+        } else {
+            probability = 10;
+            document.getElementById('row-low').classList.add('highlight-row');
+        }
+
+        document.getElementById('prob-display').innerText = `${probability}%`;
+
+        // Move to next step
+        setStep(2);
+    }
+
+    function resetApp() {
+        answers = { roof: null, children: null, tv: null };
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        checkSurveyComplete();
+        setStep(0);
+    }
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+main.html
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Analytic Web App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='hyper/images/favicon.ico') }}">
+
+        <!-- Datatables css -->
+        <link href="{{ url_for('static', filename='hyper/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/vendor/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/vendor/datatables.net-fixedheader-bs5/css/fixedHeader.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/vendor/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/vendor/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+
+
+        <!-- Daterangepicker css -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='hyper/vendor/daterangepicker/daterangepicker.css') }}">
+       
+        <!-- Vector Map css -->
+        <link rel="stylesheet"  href="{{ url_for('static', filename='hyper/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}">
+        
+        <!-- Theme Config Js -->
+        <script src="{{ url_for('static', filename='hyper/js/hyper-config.js') }}"></script>
+
+        <!-- App css -->
+        <link href="{{ url_for('static', filename='hyper/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+        <link href="{{ url_for('static', filename='hyper/css/app-saas.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+        
+        <!-- Icons css -->
+        <link href="{{ url_for('static', filename='hyper/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='hyper/css/icons.css') }}" rel="stylesheet" type="text/css" />\
+                
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+        <!-- for analytics graph -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <!-- for philippine map -->
+        <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/mapdata/countries/ph/ph-all.topo.json"></script>
+
+        
+        <link href="{{ url_for('static', filename='hyper/main.css') }}" rel="stylesheet" type="text/css" id="app-style" />
+
+
+
+    </head>
+
+    <body>
+        <div class="wrapper">
+
+            {% include 'navbar/topbar.html' %}
+            {% include 'navbar/sidebar.html' %}
+
+
+            <div class="content-page">
+                <div class="content" id="mainContent">
+                </div>
+            </div>
+
+
+            
+        </div>
+
+        <script src="{{ url_for('static', filename='hyper/main.js') }}" ></script>
+        <script src="{{ url_for('static', filename='hyper/graph.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/users.js') }}" ></script>
+        <script src="{{ url_for('static', filename='hyper/ppi.js') }}"></script>
+        
+
+        <!-- Daterangepicker js -->
+        <script src="{{ url_for('static', filename='hyper/vendor/daterangepicker/moment.min.js') }}" ></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/daterangepicker/daterangepicker.js') }}" ></script>
+        
+        <!-- Apex Charts js -->
+        <script src="{{ url_for('static', filename='hyper/vendor/apexcharts/apexcharts.min.js') }}"></script>
+        <!-- Charts js -->
+        <script src="{{ url_for('static', filename='hyper/vendor/chart.js/chart.min.js') }}"></script>
+
+
+        <!-- Vector Map js -->
+        <script src="{{ url_for('static', filename='hyper/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}" ></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}" ></script>
+
+        <!-- Dashboard App js -->
+        <script src="{{ url_for('static', filename='hyper/js/pages/demo.dashboard.js') }}"></script>
+
+        <!-- Vendor js -->
+        <script src="{{ url_for('static', filename='hyper/js/vendor.min.js') }}"></script>
+
+        <!-- MDI Icons Demo js -->
+        <script src="{{ url_for('static', filename='hyper/js/pages/demo.materialdesignicons.js') }}"></script>
+
+        <!-- Datatables js -->
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-fixedcolumns-bs5/js/fixedColumns.bootstrap5.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/vendor/datatables.net-select/js/dataTables.select.min.js') }}"></script>
+
+        <!-- Datatable Init js -->
+        <script src="{{ url_for('static', filename='hyper/js/pages/demo.datatable-init.js') }}"></script>
+
+        <!-- App js -->
+        <script src="{{ url_for('static', filename='hyper/js/app.js') }}"></script>
+        <script src="{{ url_for('static', filename='hyper/js/app.min.js') }}"></script>
+
+ 
+    </body>
+</html> 

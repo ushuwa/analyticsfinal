@@ -1,0 +1,273 @@
+<style>
+    :root {
+        --ppi-crimson: #346739;
+        --light-gray: #f8f9fa;
+        --bg: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #333;
+    }
+
+    #insights {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    /* Table Container Styling */
+    .table-container-modern {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: white;
+    }
+
+    .table-responsive-modern {
+        height: calc(100vh - 280px); /* Adjust based on your header height */
+        overflow-y: auto;
+    }
+
+    #povertyIndexTables {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* Header Styling */
+    #povertyIndexTables thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--bg) !important;
+        color: #666;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 15px;
+        border-bottom: 2px solid var(--border-color);
+        text-align: left;
+    }
+
+    /* Body Styling */
+    #povertyIndexTables tbody td {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+        color: var(--text-dark);
+    }
+
+    /* Row Hover Effect */
+    #povertyIndexTables tbody tr:hover {
+        background-color: rgba(128, 0, 32, 0.03);
+    }
+
+    /* Alignment for numeric columns */
+    .text-center { text-align: center !important; }
+
+    /* Filter Labels */
+    .filter-label { 
+        font-weight: 600; 
+        font-size: 0.85rem; 
+        color: var(--text-dark);
+    }
+
+    /* Loading Spinner Styling */
+    .table-loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    .spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid var(--border-color);
+        border-top: 3px solid var(--ppi-crimson);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 10px auto;
+    }
+
+    input {
+      padding-top: 0.28rem;
+      padding-bottom: 0.28rem;
+      padding-left: 0.8rem;
+      font-size: 0.875rem;
+      border-radius: 0.2rem;
+      width: auto;
+      max-width: 160px;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .btn-crimson {
+        background-color: var(--ppi-crimson) !important;
+        border-color: var(--ppi-crimson) !important;
+        color: white;
+    }
+
+    .btn-crimson:hover {
+        filter: brightness(1.2);
+    }
+    
+</style>
+
+<div class="container-fluid" id="insights">
+    <div class="row mb-2">
+        <div class="col-12">
+            <h1 class="page-title" style="font-size: 2rem;">BATCH UPLOAD DASHBOARD</h1>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 d-flex align-items-center">
+            <span class="filter-label me-2">Batch Upload:</span>
+            <div class="input-group input-group-sm shadow-sm" style="width: auto;">
+                <input type="file" class="form-control" id="batchFileInput" accept=".csv">
+                <button class="btn btn-crimson text-white" type="button" id="uploadBtn">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-12 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="filter-label me-2">Show</span>
+                <select id="rowsPerPage" class="form-select form-select-sm shadow-sm" style="width: auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <span class="filter-label me-2">Search:</span>
+                <input type="text" id="tableSearch" class="form-control form-control-sm shadow-sm" 
+                      placeholder="Search..." style="width: 250px; max-width: none;">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="table-container-modern">
+                <div class="table-responsive-modern">
+                    <table id="povertyIndexTables">
+                        <thead>
+                            <tr>
+                                <th>Series No.</th>
+                                <th class="text-center">File Name</th>
+                                <th class="text-center">No. of Clients</th>
+                                <th class="text-center">No. of Rows</th>
+                                <th class="text-center">Date Uploaded</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center p-1 border-top">
+                    <small id="tableInfo" class="text-muted"></small>
+                    <div id="paginationControls"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="card shadow-sm rounded-4 p-4">
+        <h5 class="mb-3">Upload PPI CSV</h5>
+
+        <form action="/ppi/upload" method="post" class="dropzone" id="dropzonePPI"
+              data-previews-container="#previewsPPI"
+              data-upload-preview-template="#previewTemplatePPI">
+          <div class="fallback">
+            <input name="file" type="file" multiple />
+          </div>
+          <div class="dz-message text-center py-5">
+            <i class="h1 text-muted ri-upload-cloud-2-line mb-3"></i>
+            <h6 class="mb-1">Drag & Drop CSV files here</h6>
+            <small class="text-muted">(Or click to select files)</small>
+          </div>
+        </form>
+
+        <div id="previewsPPI" class="mt-3"></div>
+
+        <div class="d-none" id="previewTemplatePPI">
+          <div class="card rounded-3 mb-2 shadow-sm">
+            <div class="card-body py-2 px-3 d-flex align-items-center">
+              <span class="logo-lg">
+                <img data-dz-thumbnail src="" class="rounded-circle me-3" style="width:40px; height:40px;" alt="logo">
+              </span>
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span data-dz-name class="fw-semibold"></span>
+                </div>
+                <div class="progress mt-1" style="height:5px;">
+                  <div class="progress-bar" role="progressbar" data-dz-uploadprogress></div>
+                </div>
+                <div class="text-success small" data-dz-success-message></div>
+                <div class="text-danger small" data-dz-error-message></div>
+              </div>
+              <a href="javascript:void(0);" data-dz-remove class="text-danger d-flex align-items-center" style="font-size: large;">
+                <i class="ri-close-line"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+.dropzone {
+  border: 2px dashed #ced4da;
+  border-radius: 1rem;
+  background: #f8f9fa;
+  transition: all 0.3s;
+}
+.dropzone:hover {
+  border-color: #aa1f0e;
+  background: #f5c3bc;
+}
+</style>
+ -->

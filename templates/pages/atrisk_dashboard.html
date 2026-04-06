@@ -1,0 +1,287 @@
+
+<!-- 
+<style>
+    :root {
+        --ppi-crimson: #800020;
+        --light-gray: #f8f9fa;
+        --bg: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #333;
+    }
+    /* Modern Dashboard Styling */
+    .dashboard-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+    }
+    #dashboard {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    /* Refined Black Score Box */
+    .ppi-card-mini {
+        background: #000;
+        color: #fff;
+        border-radius: 12px;
+        width: 100px; /* Slightly wider to fit decimals comfortably */
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        margin-left: 10px;
+    }
+
+    h2{
+        color: white;
+        margin-bottom: 0;
+        border-bottom: 0;
+        padding-bottom: 0;
+        display: inline-block;
+    }
+
+    .ppi-card-mini h2 {
+        color: white;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .ppi-subtitle {
+        font-size: 0.60rem;
+        font-weight: 700;
+        margin-top: 10px;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+
+    /* The Beige Data Bar */
+    .data-bar {
+        background-color: #f3eee0;
+        border-radius: 10px;
+        padding: 20px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 1;
+    }
+
+    .stat-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-box i { font-size: 3rem; }
+    .stat-info { display: flex; flex-direction: column; }
+    .stat-label { font-weight: 900; font-size: 1rem; color: #333; }
+    .stat-number { font-size: 1.8rem; font-weight: 700; color: #000; line-height: 1; }
+
+    .color-blue { color: #5d87ff; }
+    .color-yellow { color: #ffbc00; }
+    .color-green { color: #0acf97; }
+
+    .chart-box {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 30px;
+        height: 350px;
+    }
+    
+    .loading-pulse {
+        opacity: 0.5;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+</style>
+
+<div class="container-fluid dashboard-container" id="dashboard">
+    <div class="row mb-2">
+        <div class="col-12">
+            <h1 class="page-title" style="font-size: 2rem;">RISK SCORE DASHBOARD</h1>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <label class="fw-bold me-2">Filter by:</label>
+            <select class="form-select d-inline-block w-auto"><option></option></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="map-container">
+                <img src="{{ url_for('static', filename='hyper/image/ph.svg') }}" style="width: 100%; padding-top: 40px;">
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <h2 class="section-title">TOP HIGH RISK BRANCH</h2>
+            <div class="list-box"></div>
+
+            <h2 class="section-title">TOP HIGH RISK CLIENTS</h2>
+            <div class="list-box">
+                <ol style="font-weight: bold; font-size: 1.1rem;">
+                    <li>Manuel Ruiz</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <h2 class="section-title">PERCENTAGE OF AT RISK CLIENT</h2>
+            <div class="risk-grid">
+                <div class="donut-wrapper">
+                    <div class="chart-container"><canvas id="lowDonut"></canvas></div>
+                    <div class="donut-label">LOW RISK</div>
+                </div>
+                <div class="donut-wrapper">
+                    <div class="chart-container"><canvas id="medDonut"></canvas></div>
+                    <div class="donut-label">MEDIUM RISK</div>
+                </div>
+                <div class="donut-wrapper">
+                    <div class="chart-container"><canvas id="highDonut"></canvas></div>
+                    <div class="donut-label">HIGH RISK</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">RISK TREND</h2>
+            <div class="trend-container">
+                <canvas id="riskTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<style>
+    :root {
+        --dashboard-green: #238b45;
+        --border-black: #000;
+        --ppi-crimson: #800020;
+        --light-gray: #f8f9fa;
+        --bg: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #333;
+    }
+
+    #dashboard {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    /* Green Underlined Headers */
+    .section-title {
+      color: var(--text-dark) !important;
+      font-family: 'Impact', sans-serif;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--border-black);
+      display: block;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+    }
+
+    /* Containers */
+    .map-container { border: 1px solid var(--border-black); padding: 15px; height: 100%; min-height: 500px; }
+    .list-box { border: 1px solid var(--border-black); min-height: 250px; padding: 15px; margin-bottom: 25px; }
+
+    /* Chart Layouts */
+    .risk-grid { display: flex; justify-content: space-around; align-items: center; margin-bottom: 30px; }
+    .donut-wrapper { width: 32%; text-align: center; position: relative; }
+    .chart-container { position: relative; height: 120px; width: 100%; }
+    
+    /* Percentage text inside donut */
+    .donut-text {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Impact', sans-serif;
+        font-size: 1.5rem;
+    }
+
+    .donut-label { font-weight: 900; font-size: 0.9rem; color: #666; margin-top: 5px; }
+    .trend-container { height: 300px; width: 100%; }
+</style>
+
+<div class="container-fluid dashboard-container" id="dashboard">
+    <div class="row mb-2">
+        <div class="col-12">
+            <h1 class="page-title" style="font-size: 2rem;">RISK SCORE DASHBOARD</h1>
+        </div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="col-12">
+            <label class="fw-bold me-2">Filter by:</label>
+            <select class="form-select d-inline-block w-auto"><option></option></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="map-container text-center">
+                <img src="{{ url_for('static', filename='hyper/image/ph.svg') }}" style="margin: 10px -90px;width: 100%;min-width: 500px;margin-top: 50px;opacity: 0.8;">
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <h2 class="section-title">TOP HIGH RISK BRANCH</h2>
+            <div id="branchListContainer" class="list-box"></div>
+
+            <h2 class="section-title">TOP HIGH RISK CLIENTS</h2>
+            <div class="list-box">
+                <ol id="highRiskClientsList" style="font-weight: 700; font-size: 0.8rem; line-height: 1.6;"></ol>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <h2 class="section-title">PERCENTAGE OF AT RISK CLIENT</h2>
+            <div class="risk-grid">
+                <div class="donut-wrapper">
+                    <div class="chart-container"><canvas id="lowDonut"></canvas></div>
+                    <div class="donut-text" id="lowText">0%</div>
+                    <div class="donut-label">LOW RISK</div>
+                </div>
+                <div class="donut-wrapper">
+                    <div class="chart-container"><canvas id="medDonut"></canvas></div>
+                    <div class="donut-text" id="medText">0%</div>
+                    <div class="donut-label">MEDIUM RISK</div>
+                </div>
+                <div class="donut-wrapper">
+                    <div class="chart-container"><canvas id="highDonut"></canvas></div>
+                    <div class="donut-text" id="highText">0%</div>
+                    <div class="donut-label">HIGH RISK</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">RISK TREND</h2>
+            <div class="trend-container">
+                <canvas id="riskTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

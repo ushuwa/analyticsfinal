@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+
+body { display: flex; height: 100vh; background: #f4f6f9; }
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #1e1e2d;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s;
+}
+
+.sidebar.collapsed { width: 70px; }
+
+.sidebar h2 {
+    margin-bottom: 30px;
+    font-size: 20px;
+    text-align: center;
+    color: #ffffff;
+    transition: opacity 0.2s;
+}
+
+.sidebar.collapsed h2 { opacity: 0; }
+
+.menu a {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #dcdcdc;
+    transition: 0.2s;
+}
+
+.menu a:hover { background: #363649; color: #fff; }
+
+.menu a.active { background: #2575fc; color: #fff; }
+
+.logout-btn {
+    margin-top: auto;
+    background: #ff4d4d;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.logout-btn:hover { background: #ff2d2d; }
+
+/* Main Content */
+.main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.main h2 { margin-bottom: 20px; color: #333; }
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+    <h2>Welcome, User {{ user_id }}!</h2>
+    <div id="sidebar-content" class="menu">
+        <a href="/dashboard" onclick="navigate(event, '/dashboard', 'dashboard.html', this)">🏠 Dashboard</a>
+        <a href="/analytics" onclick="navigate(event, '/analytics', 'analytics.html', this)">📈 Analytics</a>
+        <a href="/users" onclick="navigate(event, '/users', 'users.html', this)">👤 Users</a>
+    </div>
+
+    <div class="logout-btn" id="logoutBtn">Logout</div>
+</div>
+
+<div class="main">
+    <div id="mainContent">
+    </div>
+</div>
+
+<script>
+// Highlight active link
+function setActiveLink(linkElement) {
+    document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+    if (linkElement) linkElement.classList.add('active');
+}
+
+// Load content dynamically
+async function loadPage(page) {
+    try {
+        const res = await fetch(page);
+        if (!res.ok) throw new Error("Page not found: " + page);
+        const html = await res.text();
+        document.getElementById("mainContent").innerHTML = html;
+    } catch (err) {
+        document.getElementById("mainContent").innerHTML = "<p style='color:red;'>Failed to load page.</p>";
+        console.error(err);
+    }
+}
+
+// Navigate function with history
+function navigate(event, url, page, linkElement) {
+    event.preventDefault();
+    loadPage(page);
+    setActiveLink(linkElement);
+    history.pushState({ page }, "", url);
+}
+
+// Handle browser back/forward buttons
+window.onpopstate = function(event) {
+    if (event.state && event.state.page) {
+        loadPage(event.state.page);
+        // Highlight corresponding sidebar link
+        const links = document.querySelectorAll('.menu a');
+        links.forEach(link => {
+            if (link.getAttribute('href') === window.location.pathname) link.classList.add('active');
+            else link.classList.remove('active');
+        });
+    }
+};
+
+// Load default page based on URL
+window.addEventListener('DOMContentLoaded', () => {
+    let path = window.location.pathname;
+    let defaultPage = 'dashboard.html';
+    let defaultLink = document.querySelector('.menu a');
+
+    if (path === '/analytics') { defaultPage = 'analytics.html'; defaultLink = document.querySelector('a[href="/analytics"]'); }
+    else if (path === '/users') { defaultPage = 'users.html'; defaultLink = document.querySelector('a[href="/users"]'); }
+
+    loadPage(defaultPage);
+    setActiveLink(defaultLink);
+});
+
+// Logout
+document.getElementById("logoutBtn").onclick = async () => {
+    await fetch("/api/logout", { method: "POST" });
+    window.location.href = "/login";
+};
+
+// Session heartbeat
+setInterval(async () => {
+    const res = await fetch("/api/check-session");
+    if (res.status === 401) window.location.href = "/login";
+}, 10000);
+</script>
+
+</body>
+</html>

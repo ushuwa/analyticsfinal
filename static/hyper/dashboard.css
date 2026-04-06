@@ -1,0 +1,10 @@
+/* 1. Target the FIRST dot (Pre Intervention) and force it to be Purple */
+/* Using !important ensures this style overrides conflicting styles */
+.apexcharts-tooltip-series-group:nth-of-type(1) .apexcharts-tooltip-marker {
+    color: #aa1f0e !important;
+}
+
+/* 2. Target the SECOND dot (Post Intervention) and force it to be Grey */
+.apexcharts-tooltip-series-group:nth-of-type(2) .apexcharts-tooltip-marker {
+    color: #aa1f0e !important;
+}

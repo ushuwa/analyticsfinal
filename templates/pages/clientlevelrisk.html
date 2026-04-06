@@ -1,0 +1,246 @@
+<style>
+    :root {
+        --ppi-crimson: #346739;
+        --light-gray: #f8f9fa;
+        --bg: #e1e3e5 !important;
+        --border-color: #e9ecef;
+        --text-dark: #333;
+    }
+
+    #insights {
+        padding: 20px;
+        background-color: #fff;
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .page-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+    .risk-cards-wrapper {
+        display: flex;
+        gap: 15px;
+    }
+
+    .risk-card {
+        border: 1px solid;
+        padding: 5px 10px;
+        text-align: center;
+        background: white;
+        min-width: 165px;
+    }
+
+    .risk-card .value-box {
+        display: inline-block;
+        color: white;
+        font-size: 2rem;
+        font-weight: 700;
+        padding: 0px 20px;
+        margin-bottom: 5px;
+        border-radius: 2px;
+    }
+
+    .risk-card .label {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: #000;
+        letter-spacing: -0.5px;
+    }
+    .border-low { border-color: #5cb85c; }
+    .bg-low { background-color: #5cb85c; }
+
+    .border-moderate { border-color: #5bc0de; }
+    .bg-moderate { background-color: #5bc0de; }
+
+    .border-high { border-color: #e87a6d; }
+    .bg-high { background-color: #e87a6d; }
+
+    /* Table Container Styling */
+    .table-container-modern {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: white;
+    }
+
+    .table-responsive-modern {
+        height: calc(100vh - 280px); /* Adjust based on your header height */
+        overflow-y: auto;
+    }
+
+    #atRiskTable {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* Header Styling */
+    #atRiskTable thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--bg) !important;
+        color: #666;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 15px;
+        border-bottom: 2px solid var(--border-color);
+        text-align: left;
+    }
+
+    /* Body Styling */
+    #atRiskTable tbody td {
+        padding: 12px 15px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+        color: var(--text-dark);
+    }
+
+    /* Row Hover Effect */
+    #atRiskTable tbody tr:hover {
+        background-color: rgba(128, 0, 32, 0.03);
+    }
+
+    /* Alignment for numeric columns */
+    .text-center { text-align: center !important; }
+
+    /* Filter Labels */
+    .filter-label { 
+        font-weight: 600; 
+        font-size: 0.85rem; 
+        color: var(--text-dark);
+    }
+
+    /* Loading Spinner Styling */
+    .table-loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+     /* Pagination Styling */
+    .pagination .page-link {
+        color: var(--ppi-crimson);
+        border-color: var(--border-color);
+        cursor: pointer;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: var(--ppi-crimson);
+        border-color: var(--ppi-crimson);
+        color: white;
+    }
+    .pagination .page-item.disabled .page-link {
+        color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid var(--border-color);
+        border-top: 3px solid var(--ppi-crimson);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 10px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="container-fluid" id="insights">
+    <div class="header-container mb-3">
+        <div class="title-filter-group">
+            <h1 class="page-title mb-3" style="font-size: 2rem;">CLIENT AT RISK</h1>
+            
+            <div class="filter-row">
+                <div class="col-12 d-flex align-items-center flex-wrap">
+                    <div class="d-flex align-items-center me-1">
+                        <span class="filter-label me-2">Show</span>
+                        <select id="rowsPerPage" class="form-select form-select-sm shadow-sm" style="width: auto;">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex align-items-center me-1">
+                        <span class="filter-label me-2">Filter by:</span>
+                        <select id="selectBranchLevel" class="form-select form-select-sm shadow-sm" style="width: auto; min-width: 140px;">
+                            <option value="area">Area</option>
+                            <option value="unit">Unit</option>
+                            <option value="center">Center</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex align-items-center me-1">
+                        <span class="filter-label me-2">CID:</span>
+                        <input type="search" id="user-search" class="form-control form-control-sm shadow-sm" placeholder="Search ID..." style="margin-right: 10px;width: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="risk-cards-wrapper">
+            <div class="risk-card border-low">
+                <div class="value-box bg-low" id="count-low">0</div>
+                <span class="label">Low Risk</span>
+            </div>
+            <div class="risk-card border-moderate">
+                <div class="value-box bg-moderate" id="count-moderate">0</div>
+                <span class="label">Moderate Risk</span>
+            </div>
+            <div class="risk-card border-high">
+                <div class="value-box bg-high" id="count-high">0</div>
+                <span class="label">High Risk</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="table-container-modern">
+                <div class="table-responsive-modern">
+                    <table id="atRiskTable">
+                        <thead>
+                            <tr>
+                                <th>CID</th>
+                                <th>Name</th>
+                                <th>Area</th>
+                                <th>Unit</th>
+                                <th>Center</th>
+                                <th>Loan Type</th>
+                                <th>Loan Principal</th>
+                                <th>Loan Balance</th>
+                                <th>Loan Term</th>
+                                <th>Days Arrear</th>
+                                <th>Risk Score</th>
+                                <th>Risk Severity</th>
+                                <th>Recommended Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center p-1 border-top">
+                    <small id="tableInfo" class="text-muted"></small>
+                    <div id="paginationControls"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
