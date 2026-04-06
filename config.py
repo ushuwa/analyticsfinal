@@ -5,8 +5,9 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "devkey123")
-    DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_PORT = os.getenv("DB_PORT", "5432")
-    DB_NAME = os.getenv("DB_NAME", "analytics")
-    DB_USER = os.getenv("DB_USER", "postgres")
-    DB_PASS = os.getenv("DB_PASS", "123")
+
+    DATABASE_URL = os.getenv("postgresql://analytics_h94f_user:jFVlxpFqygGU6BwOBbu8vTv9VCGhwE7w@dpg-d79odlmuk2gs73ehliu0-a/analytics_h94f")
+
+    # Fix for SQLAlchemy (Render uses postgres:// sometimes)
+    if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
